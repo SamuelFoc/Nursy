@@ -1,0 +1,127 @@
+[tool.ruff]
+exclude = [
+    ".git",
+    ".hypothesis",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".venv",
+    "__pypackages__",
+    "cdk.out",
+    "local_caches",
+    "node_modules",
+]
+line-length = 200
+target-version = "py312"
+
+[tool.ruff.lint]
+preview = true
+ignore = [
+    "A001", # Variable {name} is shadowing a python builtin
+    "A002", # Argument {name} is shadowing a python builtin
+    "A003", # Attribute {name} is shadowing a python builtin
+    "B009", # Do not call `getattr` with a constant attribute value. It is not any safer than normal property access. -> MyPy complains on private members.
+    "B010", # Do not call `setattr` with a constant attribute value. It is not any safer than normal property access.
+    "B905", # `zip()` without an explicit `strict=` parameter
+    "BLE001", # Do not catch blind exception: `Exception`
+    "C408", # dict() call
+    "C420", # dict.fromkeys
+    "E266", # Too many leading `#` before block comment
+    "N818", # Exception name {name} should be named with an Error suffix
+    "PT001", # Use @pytest.fixture() over @pytest.fixture
+    "S105", # Potential usage of hardcoded passwords in strings
+    "S106", # Potential usege of hardcoded secrets in strings
+    "S301", # `pickle` and modules that wrap it can be unsafe when used to deserialize untrusted data, possible security issue
+    "S311", # Standard pseudo-random generators are not suitable for cryptographic purposes
+    "S403", # `pickle`, `cPickle`, `dill`, and `shelve` modules are possibly insecure
+    "S404", # Suspicious subprocess import
+    "S603", # `subprocess` call: check for execution of untrusted input
+    "S607", # starting of a (sub)process with a partial executable path
+    "SIM102", # Use a single `if` statement instead of nested `if` statements
+    "SIM108", # Use a ternary operator instead of if-else block
+    "SIM117", # Use a single `with` statement with multiple contexts instead of nested `with` statements
+    "SIM118", # Do not use "k in actual.keys()"
+
+    "UP007", # Use `X | Y` for type annotations (triggers on Optional[])
+    "UP015", # Unnecessary open mode parameters
+    "ERA001", # Commented-out code
+
+    # Remove when fixed
+    "C901", # Complex structures
+    "PTH118", # `os.path.join()` should be replaced by `Path` with `/` operator
+    "UP040", # TODO: 3559 Needs support for new mypy
+    "UP045", # Allow Optional[]
+    "UP046", # Allow Generic[]
+    "UP017", # TODO: 3560 Migrate everything to DateTime
+    "UP047", # Generic function should use type parameters
+]
+select = [
+    'A', # flake8-builtins
+    # 'ASYNC', # flake8-async
+    'B', # flake8-bugbear
+    'BLE', # flake8-blind-except
+    'C4', # flake8-comprehensions
+    'C90', # mccabe
+    'COM', # flake8-commas
+    'DTZ', # flake8-datetimez
+    'E', # pycodestyle / Error
+    # 'EM', # flake8-errmsg
+    'ERA', # eradicate
+    'F', # Pyflakes
+    # 'FBT', # flake8-boolean-trap
+    # 'G', # flake8-logging-format
+    'I', # isort
+    'N', # pep8-naming
+    'NPY', # NumPy-specific rules
+    'PIE', # flake8-pie
+    'PT', # flake8-pytest-style
+    'PTH', # flake8-use-pathlib
+    'S', # flake8-bandit
+    'SIM', # flake8-simplify
+    'TID', # flake8-tidy-imports
+    'UP', # pyupgrade
+    'W', # pycodestyle / Warning
+]
+
+[tool.ruff.lint.flake8-annotations]
+mypy-init-return = true
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = [
+    'bp_transactions.base.core.BaseAmount',
+    'bp_transactions.base.core.Days',
+]
+
+[tool.ruff.lint.isort]
+force-single-line = true
+known-first-party = [
+    'bp_*',
+]
+
+[tool.ruff.lint.per-file-ignores]
+"infra/transactions-config/bp_transactions_config/schemas/baller/schema.py" = ["N815"]  # mixedCase variables in tornado schema
+"infra/transactions-config/bp_transactions_config/schemas/tornado/schema.py" = ["N815"]  # mixedCase variables in tornado schema
+"libs/project-utils/bp_project_utils/tests/test_event_bus.py" = ["N803"]  # boto argument names should be lowercase
+"infra/scripts/bp_transactions_infra/aws_iam_policies/actions/aws_marketplace_management.py" = ["N816"]  #  MixedCase global scope variables in aws IAM policies
+"infra/scripts/bp_transactions_infra/aws_iam_policies/conditions.py" = ["N802"]  # Function name should be lowercase
+"*/tests/*" = ["S106", "S101"]  # Hardcoded credentials in unit tests, allow asserts in tests
+"**/test_*.py" = ["S101"]  # allow asserts in tests
+"libs/test-utils/bp_test_utils/*" = ["S101"]  # allow asserts in tests-related methods
+"bp_transactions/util/testutils.py" = ["S101"]  # allow asserts in tests-related methods
+"**/smoke_test/**" = ["S101"]  # allow asserts in smoke tests
+"tools/docker_files/experiment_ec2/notebook_templates/*" = ["F401"]  # ignore unused imports in jupyter notebook templates
+"projects/lambda-functions/bp_lambda_functions/lucinity_alert_sender.py" = ["N815"]  # ignore camelCase in variable names in Lusinity API schema
+
+[tool.ruff.lint.pep8-naming]
+classmethod-decorators = [
+    "classmethod",
+    "pydantic.root_validator",
+    "pydantic.validator",
+]
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
