@@ -41,6 +41,8 @@ dependencies = [
     "tqdm==4.67.1",
     "typing-extensions==4.14.1",
     "typing-inspection==0.4.1",
+    "fastapi==0.116.1",
+    "uvicorn==0.32.1"
 ]
 
 [project.optional-dependencies]
