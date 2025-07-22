@@ -1,6 +1,6 @@
 import re
 
-from app.lex.lib.regex import RegexExpression
+from api.lex.lib.regex import RegexExpression
 
 
 class Extractor:

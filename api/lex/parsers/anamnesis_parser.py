@@ -1,6 +1,6 @@
 import re
 
-from app.lex.parser import Parser
+from api.lex.parser import Parser
 
 
 class AnamnesisParser(Parser):

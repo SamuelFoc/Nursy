@@ -1,4 +1,4 @@
-from app.communication.communication import Response
+from api.communication.communication import Response
 
 USER_GREETING = Response(
     purpose='Explain the process of information retrieval to the end user.',

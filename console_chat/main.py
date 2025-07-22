@@ -3,6 +3,7 @@ import websockets
 import json
 import os
 from dotenv import load_dotenv
+from websockets.exceptions import InvalidStatusCode  # still valid in websockets <12.0
 
 # Load .env file if present
 load_dotenv()
@@ -24,7 +25,8 @@ async def chat():
 
             # Initial nurse message
             first = await ws.recv()
-            print("🤖 Nurse:", json.loads(first).get("message"))
+            first_data = json.loads(first)
+            print("🤖 Nurse:", first_data.get("message", "No message received"))
 
             while True:
                 print("\n📝 Your response:")
@@ -39,27 +41,31 @@ async def chat():
                     except json.JSONDecodeError as e:
                         print("❌ Failed to decode server response:")
                         print(f"Raw: {raw}")
-                        raise e  # or exit
+                        raise e
 
-                    if data.get("role") == "nurse":
-                        print("\n🤖 Nurse:", data["message"])
-                        if "question" in data:
-                            print("❓", data["question"])
+                    role = data.get("role")
+
+                    if role == "nurse":
+                        print("\n🤖 Nurse:", data.get("flag"))
+                        if "message" in data:
+                            print("❓", data["message"])
                         break
 
-                    elif data.get("role") == "system" and data.get("type") == "anamnesis":
+                    elif role == "system" and data.get("flag") == "END":
                         print("\n🧾 Received raw anamnesis from server:")
-                        print(data["payload"]["raw_text"])
-
-                    elif data.get("role") == "system" and data.get("type") == "end":
+                        payload = data.get("payload", {})
+                        print(payload.get("raw_text", "[no raw text]"))
                         print("\n✅ Conversation ended.")
-                        return
 
-                    elif data.get("role") == "system":
-                        print("\n⚠️", data["message"])
+                    elif role == "system" and data.get("flag") == "BAD INPUT":
+                        print("\n⚠️ System message:", data.get("message", "[no message]"))
                         break
 
-    except websockets.exceptions.InvalidStatusCode as e:
+                    else:
+                        print("\n❓ Unknown message format:", json.dumps(data, indent=2))
+                        break
+
+    except InvalidStatusCode as e:
         print(f"❌ WebSocket connection failed: HTTP {e.status_code}")
         if e.status_code == 403:
             print("🔐 Likely JWT issue. Check your token.")

@@ -5,13 +5,13 @@ import os
 import openai
 from dotenv import load_dotenv
 
-from app.agents.chat_agent import ChatAgent
-from app.communication.lib.prompts import ANSWER_VERIFICATION_PROMPT, DIAGNOSTIC_PROMPT
-from app.communication.lib.response import USER_GREETING
-from app.lex.extractor import Extractor
-from app.lex.lib.regex import ANAMNESIS_REGEX, QUESTION_REGEX
-from app.lex.parsers.anamnesis_parser import AnamnesisParser
-from app.agents.verification_agent import VerificationAgent
+from api.agents.chat_agent import ChatAgent
+from api.communication.lib.prompts import ANSWER_VERIFICATION_PROMPT, DIAGNOSTIC_PROMPT
+from api.communication.lib.response import USER_GREETING
+from api.lex.extractor import Extractor
+from api.lex.lib.regex import ANAMNESIS_REGEX, QUESTION_REGEX
+from api.lex.parsers.anamnesis_parser import AnamnesisParser
+from api.agents.verification_agent import VerificationAgent
 
 load_dotenv()
 openai.api_key = os.getenv('OPENAI_API_KEY')

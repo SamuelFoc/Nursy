@@ -1,8 +1,8 @@
 from fastapi import WebSocket
-from app.agents.chat_agent import ChatAgent
-from app.agents.verification_agent import VerificationAgent
-from app.communication.lib.prompts import DIAGNOSTIC_PROMPT, ANSWER_VERIFICATION_PROMPT
-from app.lex.extractor import Extractor
+from api.agents.chat_agent import ChatAgent
+from api.agents.verification_agent import VerificationAgent
+from api.communication.lib.prompts import DIAGNOSTIC_PROMPT, ANSWER_VERIFICATION_PROMPT
+from api.lex.extractor import Extractor
 
 class ConnectionManager:
     def __init__(self):

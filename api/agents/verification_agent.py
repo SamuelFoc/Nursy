@@ -1,6 +1,6 @@
 import openai
 
-from app.communication.communication import Prompt
+from api.communication.communication import Prompt
 
 
 class VerificationAgent:
