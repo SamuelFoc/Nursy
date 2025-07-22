@@ -1,5 +1,5 @@
 import openai
-from communication.communication import Prompt
+from app.communication.communication import Prompt
 
 
 class ChatAgent:
