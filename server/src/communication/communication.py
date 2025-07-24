@@ -15,6 +15,7 @@ class Prompt:
             missing = e.args[0]
             raise ValueError(f"Missing context value for: '{missing}'") from e
 
+
 @dataclass
 class Response:
     value: str

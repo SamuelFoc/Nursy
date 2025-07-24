@@ -1,17 +1,19 @@
-from datetime import datetime
 import json
 import os
+from datetime import datetime
 
 import openai
 from dotenv import load_dotenv
 
-from agents.chat_agent import ChatAgent
-from communication.lib.prompts import ANSWER_VERIFICATION_PROMPT, DIAGNOSTIC_PROMPT
-from communication.lib.response import USER_GREETING
-from lex.extractor import Extractor
-from lex.lib.regex import ANAMNESIS_REGEX, QUESTION_REGEX
-from lex.parsers.anamnesis_parser import AnamnesisParser
-from agents.verification_agent import VerificationAgent
+from src.agents.chat_agent import ChatAgent
+from src.agents.verification_agent import VerificationAgent
+from src.communication.lib.prompts import ANSWER_VERIFICATION_PROMPT
+from src.communication.lib.prompts import DIAGNOSTIC_PROMPT
+from src.communication.lib.response import USER_GREETING
+from src.lex.extractor import Extractor
+from src.lex.lib.regex import ANAMNESIS_REGEX
+from src.lex.lib.regex import QUESTION_REGEX
+from src.lex.parsers.anamnesis_parser import AnamnesisParser
 
 load_dotenv()
 openai.api_key = os.getenv('OPENAI_API_KEY')  # Or hardcode your key here
@@ -48,7 +50,7 @@ def main():
         if '<DIAGNOSIS DONE>' in response:
             anamnesis_str = extractor.extract(response, ANAMNESIS_REGEX)
             anamnesis_dict = parser.parse(anamnesis_str)
-            time_stamp = datetime.now().strftime("%d_%m_%Y-%H:%M:%S")
+            time_stamp = datetime.now().strftime('%d_%m_%Y-%H:%M:%S')
             with open(f'patients/anamnesis-{time_stamp}.json', 'w') as f:
                 json.dump(anamnesis_dict, f, indent=2)
             print('\n✅ Anamnesis saved to `anamnesis.json`')

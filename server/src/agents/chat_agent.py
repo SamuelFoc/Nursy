@@ -1,6 +1,8 @@
-import openai
 import asyncio
-from typing import AsyncGenerator
+from collections.abc import AsyncGenerator
+
+import openai
+
 from communication.communication import Prompt
 
 
@@ -14,15 +16,15 @@ class ChatAgent:
 
     def start_conversation(self, first_message: str) -> str:
         if self._is_generating:
-            raise RuntimeError("Agent is currently generating a response. Please wait.")
+            raise RuntimeError('Agent is currently generating a response. Please wait.')
         self.history.append({'role': 'assistant', 'content': first_message})
         return first_message
 
     async def send_user_input(self, user_input: str) -> AsyncGenerator[str, None]:
         """Send user input and return an async generator for streaming response."""
         if self._is_generating:
-            raise RuntimeError("Agent is currently generating a response. Please wait.")
-            
+            raise RuntimeError('Agent is currently generating a response. Please wait.')
+
         async with self._lock:
             self._is_generating = True
             try:
@@ -34,40 +36,40 @@ class ChatAgent:
 
     async def _call_openai_stream(self) -> AsyncGenerator[str, None]:
         """Streaming OpenAI call that yields chunks and updates history."""
-        response_content = ""
-        
+        response_content = ''
+
         stream = openai.chat.completions.create(
             model=self.model,
             messages=self.history,
             temperature=self.temperature,
             stream=True,
         )
-        
+
         for chunk in stream:
             if chunk.choices[0].delta.content is not None:
                 content = chunk.choices[0].delta.content
                 response_content += content
                 yield content
-        
+
         # Add complete response to history after streaming is done
         self.history.append({'role': 'assistant', 'content': response_content})
 
     def get_conversation_history(self) -> list:
         """Get the current conversation history."""
         if self._is_generating:
-            raise RuntimeError("Agent is currently generating a response. Please wait.")
+            raise RuntimeError('Agent is currently generating a response. Please wait.')
         return [msg for msg in self.history if msg['role'] != 'system']
 
     def clear_history(self, keep_system_prompt: bool = True) -> None:
         """Clear conversation history, optionally keeping the system prompt."""
         if self._is_generating:
-            raise RuntimeError("Agent is currently generating a response. Please wait.")
-            
+            raise RuntimeError('Agent is currently generating a response. Please wait.')
+
         if keep_system_prompt and self.history:
             self.history = [self.history[0]]  # Keep only system prompt
         else:
             self.history = []
-    
+
     @property
     def is_generating(self) -> bool:
         """Check if the agent is currently generating a response."""

@@ -1,6 +1,5 @@
 from communication.communication import Prompt
 
-
 NURSE_BEHAVIORAL_PROMPT = Prompt(
     purpose='Defines the virtual nurse’s behavior, tone, and interaction protocol.',
     template="""
@@ -24,7 +23,7 @@ NURSE_BEHAVIORAL_PROMPT = Prompt(
 
     All content intended for the patient must appear **before** the `---` separator.  
     All content intended for the physician (structured output, flags, possible diagnoses, advice) must appear **after** the separator.
-    """
+    """,
 )
 
 
@@ -49,7 +48,7 @@ TRIAGE_RULES_PROMPT = Prompt(
 
     In **both cases**, generate probable diagnoses and basic medical advice only in the `Anamnesis` section (for physician use only).
     Never present this content to the patient.
-    """
+    """,
 )
 
 ANAMNESIS_OUTPUT_FORMAT_PROMPT = Prompt(
@@ -79,18 +78,12 @@ ANAMNESIS_OUTPUT_FORMAT_PROMPT = Prompt(
 
     > `<LIFE THREATENING SITUATION>` (include only if applicable)
     > `<DIAGNOSIS DONE>` (Include this **only when all fields above are complete and no further relevant follow-up questions remain**)
-    """
+    """,
 )
 
 DIAGNOSTIC_PROMPT = Prompt(
     purpose='Full virtual nurse pre-diagnostic interaction logic.',
-    template=(
-        NURSE_BEHAVIORAL_PROMPT.template
-        + "\n\n"
-        + TRIAGE_RULES_PROMPT.template
-        + "\n\n"
-        + ANAMNESIS_OUTPUT_FORMAT_PROMPT.template
-    )
+    template=(NURSE_BEHAVIORAL_PROMPT.template + '\n\n' + TRIAGE_RULES_PROMPT.template + '\n\n' + ANAMNESIS_OUTPUT_FORMAT_PROMPT.template),
 )
 
 ANSWER_VERIFICATION_PROMPT = Prompt(
