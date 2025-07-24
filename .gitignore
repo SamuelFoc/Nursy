@@ -7,3 +7,4 @@ old
 __pycache__
 ntb
 patients
+**/*.egg-info/
