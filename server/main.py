@@ -34,7 +34,7 @@ async def initiate_conversation() -> dict:
 
 
 @app.get('/conversation/{conversation_id}')
-async def conversation(conversation_id: str):
+async def get_conversation(conversation_id: str):
     if conversation_id not in chat_agents:
         raise HTTPException(status_code=204, detail='Conversation not found')
 
@@ -45,7 +45,7 @@ async def conversation(conversation_id: str):
 
 
 @app.post('/conversation/{conversation_id}')
-async def conversation(conversation_id: str, request: MessageRequest):
+async def post_conversation(conversation_id: str, request: MessageRequest):
     if conversation_id not in chat_agents:
         raise HTTPException(status_code=404, detail='Conversation not found')
 
