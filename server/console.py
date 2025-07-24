@@ -5,16 +5,16 @@ import os
 import openai
 from dotenv import load_dotenv
 
-from api.agents.chat_agent import ChatAgent
-from api.communication.lib.prompts import ANSWER_VERIFICATION_PROMPT, DIAGNOSTIC_PROMPT
-from api.communication.lib.response import USER_GREETING
-from api.lex.extractor import Extractor
-from api.lex.lib.regex import ANAMNESIS_REGEX, QUESTION_REGEX
-from api.lex.parsers.anamnesis_parser import AnamnesisParser
-from api.agents.verification_agent import VerificationAgent
+from agents.chat_agent import ChatAgent
+from communication.lib.prompts import ANSWER_VERIFICATION_PROMPT, DIAGNOSTIC_PROMPT
+from communication.lib.response import USER_GREETING
+from lex.extractor import Extractor
+from lex.lib.regex import ANAMNESIS_REGEX, QUESTION_REGEX
+from lex.parsers.anamnesis_parser import AnamnesisParser
+from agents.verification_agent import VerificationAgent
 
 load_dotenv()
-openai.api_key = os.getenv('OPENAI_API_KEY')
+openai.api_key = os.getenv('OPENAI_API_KEY')  # Or hardcode your key here
 
 # Define Agents
 chat_agent = ChatAgent(DIAGNOSTIC_PROMPT)
