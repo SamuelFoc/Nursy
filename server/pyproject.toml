@@ -1,55 +1,24 @@
-[build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "nursy"
 version = "0.1.0"
-description = "Nursy project"
+description = ""
+authors = [
+    {name = "Ing. Samuel Sipikal"},
+    {name = "Ing. David Tomecek"},
+]
+readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "annotated-types==0.7.0",
-    "anyio==4.9.0",
-    "aws-error-utils==2.7.0",
-    "aws-sso-lib==1.14.0",
-    "aws-sso-util==4.33.0",
-    "boto3==1.39.3",
-    "botocore==1.39.3",
-    "certifi==2025.7.14",
-    "click==8.2.1",
-    "distro==1.9.0",
-    "h11==0.16.0",
-    "httpcore==1.0.9",
-    "httpx==0.28.1",
-    "idna==3.10",
-    "jiter==0.10.0",
-    "jmespath==1.0.1",
-    "jsonschema==4.24.0",
-    "jsonschema-specifications==2025.4.1",
-    "mypy-extensions==1.1.0",
-    "openai==1.97.0",
-    "packaging==25.0",
-    "pathspec==0.12.1",
-    "pydantic==2.11.7",
-    "pydantic-core==2.33.2",
-    "python-dateutil==2.9.0.post0",
-    "python-dotenv==1.1.1",
-    "referencing==0.36.2",
-    "rpds-py==0.26.0",
-    "s3transfer==0.13.0",
-    "sniffio==1.3.1",
-    "tqdm==4.67.1",
-    "typing-extensions==4.14.1",
-    "typing-inspection==0.4.1",
-    "fastapi==0.116.1",
-    "uvicorn==0.32.1"
+    "fastapi (>=0.116.1,<0.117.0)",
+    "openai (>=1.97.0,<2.0.0)",
+    "python-dotenv (>=1.1.1,<2.0.0)",
+    "jose (>=1.0.0,<2.0.0)"
 ]
 
-[project.optional-dependencies]
-dev = [
-    "black==25.1.0",
-    "ruff",
-]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
 exclude = [
@@ -98,19 +67,9 @@ ignore = [
     "UP007", # Use `X | Y` for type annotations (triggers on Optional[])
     "UP015", # Unnecessary open mode parameters
     "ERA001", # Commented-out code
-
-    # Remove when fixed
-    "C901", # Complex structures
-    "PTH118", # `os.path.join()` should be replaced by `Path` with `/` operator
-    "UP040", # TODO: 3559 Needs support for new mypy
-    "UP045", # Allow Optional[]
-    "UP046", # Allow Generic[]
-    "UP017", # TODO: 3560 Migrate everything to DateTime
-    "UP047", # Generic function should use type parameters
 ]
 select = [
     'A', # flake8-builtins
-    # 'ASYNC', # flake8-async
     'B', # flake8-bugbear
     'BLE', # flake8-blind-except
     'C4', # flake8-comprehensions
@@ -118,11 +77,8 @@ select = [
     'COM', # flake8-commas
     'DTZ', # flake8-datetimez
     'E', # pycodestyle / Error
-    # 'EM', # flake8-errmsg
     'ERA', # eradicate
     'F', # Pyflakes
-    # 'FBT', # flake8-boolean-trap
-    # 'G', # flake8-logging-format
     'I', # isort
     'N', # pep8-naming
     'NPY', # NumPy-specific rules
@@ -139,31 +95,11 @@ select = [
 [tool.ruff.lint.flake8-annotations]
 mypy-init-return = true
 
-[tool.ruff.lint.flake8-bugbear]
-extend-immutable-calls = [
-    'bp_transactions.base.core.BaseAmount',
-    'bp_transactions.base.core.Days',
-]
-
 [tool.ruff.lint.isort]
 force-single-line = true
 known-first-party = [
-    'bp_*',
+    'app*',
 ]
-
-[tool.ruff.lint.per-file-ignores]
-"infra/transactions-config/bp_transactions_config/schemas/baller/schema.py" = ["N815"]  # mixedCase variables in tornado schema
-"infra/transactions-config/bp_transactions_config/schemas/tornado/schema.py" = ["N815"]  # mixedCase variables in tornado schema
-"libs/project-utils/bp_project_utils/tests/test_event_bus.py" = ["N803"]  # boto argument names should be lowercase
-"infra/scripts/bp_transactions_infra/aws_iam_policies/actions/aws_marketplace_management.py" = ["N816"]  #  MixedCase global scope variables in aws IAM policies
-"infra/scripts/bp_transactions_infra/aws_iam_policies/conditions.py" = ["N802"]  # Function name should be lowercase
-"*/tests/*" = ["S106", "S101"]  # Hardcoded credentials in unit tests, allow asserts in tests
-"**/test_*.py" = ["S101"]  # allow asserts in tests
-"libs/test-utils/bp_test_utils/*" = ["S101"]  # allow asserts in tests-related methods
-"bp_transactions/util/testutils.py" = ["S101"]  # allow asserts in tests-related methods
-"**/smoke_test/**" = ["S101"]  # allow asserts in smoke tests
-"tools/docker_files/experiment_ec2/notebook_templates/*" = ["F401"]  # ignore unused imports in jupyter notebook templates
-"projects/lambda-functions/bp_lambda_functions/lucinity_alert_sender.py" = ["N815"]  # ignore camelCase in variable names in Lusinity API schema
 
 [tool.ruff.lint.pep8-naming]
 classmethod-decorators = [
@@ -178,3 +114,5 @@ indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "auto"
 
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.12.4"
