@@ -1,4 +1,5 @@
-from api.communication.communication import Prompt
+from communication.communication import Prompt
+
 
 NURSE_BEHAVIORAL_PROMPT = Prompt(
     purpose='Defines the virtual nurse’s behavior, tone, and interaction protocol.',
