@@ -1,8 +1,23 @@
 "use client";
+import Link from "next/link";
+import React from "react";
 
-export function Logo({ small = false }: { small?: boolean }) {
+export function Logo({
+  small = false,
+  href = "/",
+  ariaLabel = "Virtual Nurse — Back to home",
+}: {
+  small?: boolean;
+  href?: string;
+  ariaLabel?: string;
+}) {
+  const size = small ? "h-5 w-5" : "h-6 w-6";
   return (
-    <div className={`relative ${small ? "h-5 w-5" : "h-6 w-6"}`} aria-hidden>
+    <Link
+      href={href}
+      aria-label={ariaLabel}
+      className={`relative inline-block ${size}`}
+    >
       <svg viewBox="0 0 24 24" className="absolute inset-0 h-full w-full">
         <defs>
           <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
@@ -26,7 +41,7 @@ export function Logo({ small = false }: { small?: boolean }) {
           strokeLinecap="round"
         />
       </svg>
-      <span className="sr-only">Nursy</span>
-    </div>
+      <span className="sr-only">Virtual Nurse</span>
+    </Link>
   );
 }

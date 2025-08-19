@@ -1,11 +1,13 @@
 "use client";
 import React from "react";
+import { Logo } from "../landing/Logo";
 
-
-export function ChatHeader({ title }: { title: string }) {
+export function ChatHeader() {
 return (
-<header className="p-4 bg-blue-600 text-white">
-<h1 className="text-base font-semibold">{title}</h1>
+<header className="sticky top-0 z-10 border-b border-white/10 backdrop-blur supports-[backdrop-filter]:bg-slate-900/60">
+<div className="mx-auto max-w-3xl px-4 h-12 flex items-center">
+<Logo href="/" ariaLabel="Go to landing page" />
+</div>
 </header>
 );
 }
