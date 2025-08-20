@@ -18,7 +18,7 @@ class VerificationAgent:
 
         response = openai.chat.completions.create(
             model=self.model,
-            messages=[Message(Role.USER, self.system_prompt.eval(question=question, user_input=user_input))],
+            messages=[Message(role=Role.USER, content=self.system_prompt.eval(question=question, user_input=user_input))],
             temperature=self.temperature,
         )
 

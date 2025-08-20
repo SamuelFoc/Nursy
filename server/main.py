@@ -1,27 +1,18 @@
 import os
-from uuid import uuid4
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
-from pydantic import BaseModel
 
 from src.agents.chat_agent import ChatAgent
 from src.agents.chat_agent import Message
 from src.agents.chat_agent import Role
+from src.agents.verification_agent import VerificationAgent
 from src.communication.lib.prompts import DIAGNOSTIC_PROMPT
-
-
-class Request(BaseModel):
-    message: str
-
-
-class Chat(BaseModel):
-    chat_id: str
-    history: list[Message]
-
+from src.communication.lib.prompts import REQUEST_VERIFICATION_PROMPT
+from src.models.base import Chat
+from src.models.base import Request
 
 # ---- App setup ----
 
@@ -39,6 +30,7 @@ app.add_middleware(
     allow_headers=['*'],
 )
 
+verification_agent = VerificationAgent(REQUEST_VERIFICATION_PROMPT)
 # TODO: Make it expiring dictionary
 chat_agents: dict[str, ChatAgent] = {}
 
@@ -48,13 +40,13 @@ chat_agents: dict[str, ChatAgent] = {}
 
 @app.post('/chat', response_model=Chat)
 async def initiate_chat() -> Chat:
-    chat_id = str(uuid4())
     chat_agent = ChatAgent(system_prompt=DIAGNOSTIC_PROMPT)
+    chat_id = chat_agent.id
     chat_agent.init_conversation(
         Message(role=Role.ASSISTANT, content='To get started, can you tell me what symptoms or concerns brought you in today?'),
     )
-    chat_agents[str(chat_id)] = chat_agent
-    return Chat(chat_id=chat_id, history=chat_agent.get_conversation_history())
+    chat_agents[chat_id] = chat_agent
+    return Chat(chat_id=chat_id, history=chat_agent.conversation_history)
 
 
 @app.get('/chat/{chat_id}', response_model=Chat)
@@ -63,34 +55,26 @@ async def get_chat(chat_id: str) -> Chat:
         raise HTTPException(status_code=404, detail='Conversation not found')
 
     chat_agent = chat_agents[chat_id]
-    return Chat(chat_id=chat_id, history=chat_agent.get_conversation_history())
+    return Chat(chat_id=chat_id, history=chat_agent.conversation_history)
 
 
-@app.post('/chat/{chat_id}')
-async def chat(chat_id: str, request: Request) -> StreamingResponse:
+@app.post('/chat/{chat_id}', response_model=Chat)
+async def chat(chat_id: str, request: Request) -> Chat:
     agent = chat_agents.get(chat_id)
-    print(agent)
     if not agent:
         raise HTTPException(status_code=404, detail='Conversation not found')
 
     if agent.is_generating:
         raise HTTPException(status_code=409, detail='Agent is currently generating a response.')
 
-    async def generate_response():
-        message = Message(role=Role.USER, content=request.message)
-        try:
-            async for chunk in agent.process_message(message):
-                yield f'data: {chunk}\n\n'
-        except Exception as e:
-            yield f'data: Error: {str(e)}\n\n'
-        finally:
-            yield 'data: [DONE]\n\n'
+    last_question = agent.conversation_history[-1].content
+    if not verification_agent.verify_input(last_question, request.message):
+        agent.history.append(
+            Message(role=Role.ASSISTANT, content='Your response seems unrelated or inappropriate. Please rephrase.'),
+        )
+        return Chat(chat_id=chat_id, history=agent.conversation_history)
 
-    return StreamingResponse(
-        generate_response(),
-        media_type='text/event-stream',
-        headers={
-            'Cache-Control': 'no-cache',
-            'Connection': 'keep-alive',
-        },
-    )
+    follow_up_question = await agent.process_message(Message(role=Role.USER, content=request.message))
+    agent.history.append(Message(role=Role.ASSISTANT, content=follow_up_question))
+
+    return Chat(chat_id=chat_id, history=agent.conversation_history)

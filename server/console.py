@@ -4,15 +4,15 @@ from datetime import datetime
 
 import openai
 from dotenv import load_dotenv
+from server.src.lex.lexer import Extractor
+from server.src.lex.regex_patterns import ANAMNESIS_REGEX
+from server.src.lex.regex_patterns import QUESTION_REGEX
 
 from src.agents.chat_agent import ChatAgent
 from src.agents.verification_agent import VerificationAgent
 from src.communication.lib.prompts import ANSWER_VERIFICATION_PROMPT
 from src.communication.lib.prompts import DIAGNOSTIC_PROMPT
 from src.communication.lib.response import USER_GREETING
-from src.lex.extractor import Extractor
-from src.lex.lib.regex import ANAMNESIS_REGEX
-from src.lex.lib.regex import QUESTION_REGEX
 from src.lex.parsers.anamnesis_parser import AnamnesisParser
 
 load_dotenv()
