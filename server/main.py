@@ -67,10 +67,12 @@ async def chat(chat_id: str, request: Request) -> Chat:
     if agent.is_generating:
         raise HTTPException(status_code=409, detail='Agent is currently generating a response.')
 
-    last_question = agent.conversation_history[-1].content
-    if not verification_agent.verify_input(last_question, request.message):
+    last_question = [question for question in agent.conversation_history if question.role == Role.ASSISTANT][-1]
+    last_response = Message(role=Role.USER, content=request.message)
+
+    if not verification_agent.verify_input(last_question, last_response):
         agent.history.append(
-            Message(role=Role.ASSISTANT, content='Your response seems unrelated or inappropriate. Please rephrase.'),
+            Message(role=Role.VERIFIER, content='Your response seems unrelated or inappropriate. Please rephrase.'),
         )
         return Chat(chat_id=chat_id, history=agent.conversation_history)
 

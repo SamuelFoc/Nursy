@@ -7,6 +7,20 @@ class Role(Enum):
     SYSTEM = 'system'
     USER = 'user'
     ASSISTANT = 'assistant'
+    VERIFIER = 'verifier'
+
+
+class RoleMapping:
+    _map = {
+        Role.SYSTEM: 'system',
+        Role.USER: 'user',
+        Role.ASSISTANT: 'assistant',
+        Role.VERIFIER: 'system',
+    }
+
+    @classmethod
+    def map(cls, role: Role) -> str:
+        return cls._map[role]
 
 
 class Request(BaseModel):
@@ -23,7 +37,7 @@ class Message(BaseModel):
 
     def to_openai_format(self) -> dict[str, str]:
         return {
-            'role': self.role.value,
+            'role': RoleMapping.map(self.role),
             'content': self.content,
         }
 
