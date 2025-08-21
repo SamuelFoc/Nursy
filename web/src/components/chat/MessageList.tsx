@@ -1,9 +1,9 @@
 "use client";
-import { Message } from "@/types/chat";
-import React, { useEffect, useRef } from "react";
+import { ChatMessage } from "@/types/chat";
+import { useEffect, useRef } from "react";
 import { MessageBubble } from "./MessageBuble";
 
-export function MessageList({ messages }: { messages: Message[] }) {
+export function MessageList({ messages }: { messages: ChatMessage[] }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     ref.current?.scrollTo({ top: ref.current.scrollHeight });
@@ -11,8 +11,8 @@ export function MessageList({ messages }: { messages: Message[] }) {
 
   return (
     <div ref={ref} className="space-y-3">
-      {messages.map((m) => (
-        <MessageBubble key={m.id} message={m} />
+      {messages.map((m, id) => (
+        <MessageBubble key={id} message={m} />
       ))}
     </div>
   );

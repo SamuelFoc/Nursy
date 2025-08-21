@@ -1,76 +1,90 @@
 import asyncio
-from collections.abc import AsyncGenerator
+from typing import Any
+from uuid import uuid4
 
-import openai
+from openai import AsyncOpenAI
 
 from src.communication.communication import Prompt
+from src.lex.modules.anamnesis_parser import RegexParser
+from src.models.base import Message
+from src.models.base import Role
 
 
 class ChatAgent:
-    def __init__(self, system_prompt: Prompt, model: str = 'gpt-4', temperature: float = 0.3):
+    def __init__(self, system_prompt: Prompt, model: str = 'gpt-5-nano', temperature: float = 0.3):
+        self.id = str(uuid4())
         self.model = model
         self.temperature = temperature
-        self.history = [{'role': 'system', 'content': system_prompt.eval()}]
+        self.history: list[Message] = [Message(role=Role.SYSTEM, content=system_prompt.eval())]
         self._lock = asyncio.Lock()
         self._is_generating = False
+        self._client = AsyncOpenAI()
 
-    def start_conversation(self, first_message: str) -> str:
-        if self._is_generating:
-            raise RuntimeError('Agent is currently generating a response. Please wait.')
-        self.history.append({'role': 'assistant', 'content': first_message})
-        return first_message
+        self._parser = RegexParser()
+        self.flag: str | None = None
+        self.anamnesis: str | None = None
+        self.diagnosis: str | None = None
+        self.suggestion: str | None = None
+        self.end: str | None = None
 
-    async def send_user_input(self, user_input: str) -> AsyncGenerator[str, None]:
-        """Send user input and return an async generator for streaming response."""
+    def _as_openai_messages(self) -> list[dict[str, Any]]:
+        """Convert internal history to OpenAI chat message dicts."""
+        return [m.to_openai_format() for m in self.history]
+
+    def init_conversation(self, first_message: Message) -> None:
         if self._is_generating:
-            raise RuntimeError('Agent is currently generating a response. Please wait.')
+            raise RuntimeError('Agent is currently generating a response.')
+        if first_message.role not in (Role.USER, Role.ASSISTANT):
+            raise ValueError('first_message.role must be USER or ASSISTANT.')
+        self.history.append(first_message)
+
+    async def process_message(self, message: Message) -> str:
+        if self._is_generating:
+            raise RuntimeError('Agent is currently generating a response.')
 
         async with self._lock:
             self._is_generating = True
             try:
-                self.history.append({'role': 'user', 'content': user_input})
-                async for chunk in self._call_openai_stream():
-                    yield chunk
+                self.history.append(message)
+
+                resp = await self._client.chat.completions.create(
+                    model=self.model,
+                    messages=self._as_openai_messages(),
+                    # temperature=self.temperature,
+                    stream=False,
+                )
+                full = (resp.choices[0].message.content or '').strip()
+                parsed = self._parser.parse(full)
+
+                self.flag = parsed.flag
+                self.anamnesis = parsed.anamnesis
+                self.diagnosis = parsed.diagnosis
+                self.suggestion = parsed.suggestion
+                self.end = parsed.end
+
+                return parsed.question or ''
             finally:
                 self._is_generating = False
 
-    async def _call_openai_stream(self) -> AsyncGenerator[str, None]:
-        """Streaming OpenAI call that yields chunks and updates history."""
-        response_content = ''
-
-        stream = openai.chat.completions.create(
-            model=self.model,
-            messages=self.history,
-            temperature=self.temperature,
-            stream=True,
-        )
-
-        for chunk in stream:
-            if chunk.choices[0].delta.content is not None:
-                content = chunk.choices[0].delta.content
-                response_content += content
-                yield content
-
-        # Add complete response to history after streaming is done
-        self.history.append({'role': 'assistant', 'content': response_content})
-
-    def get_conversation_history(self) -> list:
-        """Get the current conversation history."""
-        if self._is_generating:
-            raise RuntimeError('Agent is currently generating a response. Please wait.')
-        return [msg for msg in self.history if msg['role'] != 'system']
-
     def clear_history(self, keep_system_prompt: bool = True) -> None:
-        """Clear conversation history, optionally keeping the system prompt."""
         if self._is_generating:
             raise RuntimeError('Agent is currently generating a response. Please wait.')
-
         if keep_system_prompt and self.history:
-            self.history = [self.history[0]]  # Keep only system prompt
+            self.history = [self.history[0]]
         else:
             self.history = []
+        self.flag = None
+        self.anamnesis = None
+        self.diagnosis = None
+        self.suggestion = None
+        self.end = None
+
+    @property
+    def conversation_history(self) -> list[Message]:
+        if self._is_generating:
+            raise RuntimeError('Agent is currently generating a response.')
+        return [m for m in self.history if m.role != Role.SYSTEM]
 
     @property
     def is_generating(self) -> bool:
-        """Check if the agent is currently generating a response."""
         return self._is_generating

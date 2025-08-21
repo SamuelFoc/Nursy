@@ -3,6 +3,8 @@
 .venv
 .ruff_cache
 
+.DS_Store
+
 old
 
 __pycache__

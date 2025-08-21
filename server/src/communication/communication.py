@@ -17,6 +17,16 @@ class Prompt:
 
 
 @dataclass
+class CombinedPrompt:
+    prompts: list[Prompt]
+    purpose: str
+
+    def eval(self) -> str:
+        evaluated_prompts = [prompt.eval() for prompt in self.prompts]
+        return '\n\n'.join(evaluated_prompts)
+
+
+@dataclass
 class Response:
     value: str
     purpose: str = None

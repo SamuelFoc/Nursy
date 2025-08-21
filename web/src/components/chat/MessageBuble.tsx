@@ -1,8 +1,7 @@
 "use client";
-import { Message } from "@/types/chat";
-import React from "react";
+import { ChatMessage } from "@/types/chat";
 
-export function MessageBubble({ message }: { message: Message }) {
+export function MessageBubble({ message }: { message: ChatMessage }) {
   const isAssistant = message.role === "assistant";
   return (
     <div className={`flex ${isAssistant ? "justify-start" : "justify-end"}`}>

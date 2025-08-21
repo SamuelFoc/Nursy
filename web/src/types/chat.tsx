@@ -1,6 +1,11 @@
-export type Message = {
-id: string;
-role: "user" | "assistant";
-content: string;
+export type Role = "system" | "user" | "assistant";
+
+export type ChatMessage = {
+  role: Role;
+  content: string;
 };
 
+export type Chat = {
+  chat_id: string;
+  history: ChatMessage[];
+};
