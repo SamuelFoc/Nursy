@@ -3,15 +3,17 @@ from typing import Any
 from uuid import uuid4
 
 from openai import AsyncOpenAI
+from openai.types.chat import ChatCompletionMessageParam
 
+from src.communication.communication import CombinedPrompt
 from src.communication.communication import Prompt
-from src.lex.modules.anamnesis_parser import RegexParser
-from src.models.base import Message
-from src.models.base import Role
+from src.iqs_chat.chat import Message
+from src.iqs_chat.chat import Role
+from src.lex.modules.response_parser import RegexParser
 
 
 class ChatAgent:
-    def __init__(self, system_prompt: Prompt, model: str = 'gpt-5-nano', temperature: float = 0.3):
+    def __init__(self, system_prompt: Prompt | CombinedPrompt, model: str = 'gpt-5-nano', temperature: float = 0.3):
         self.id = str(uuid4())
         self.model = model
         self.temperature = temperature
@@ -22,14 +24,14 @@ class ChatAgent:
 
         self._parser = RegexParser()
         self.flag: str | None = None
-        self.anamnesis: str | None = None
+        self.anamnesis: dict[str, Any] | None = None
         self.diagnosis: str | None = None
         self.suggestion: str | None = None
-        self.end: str | None = None
+        self.end: bool | None = None
 
-    def _as_openai_messages(self) -> list[dict[str, Any]]:
+    def _as_openai_messages(self) -> list[ChatCompletionMessageParam]:
         """Convert internal history to OpenAI chat message dicts."""
-        return [m.to_openai_format() for m in self.history]
+        return [m.to_openai() for m in self.history]
 
     def init_conversation(self, first_message: Message) -> None:
         if self._is_generating:
@@ -50,7 +52,6 @@ class ChatAgent:
                 resp = await self._client.chat.completions.create(
                     model=self.model,
                     messages=self._as_openai_messages(),
-                    # temperature=self.temperature,
                     stream=False,
                 )
                 full = (resp.choices[0].message.content or '').strip()
@@ -65,19 +66,6 @@ class ChatAgent:
                 return parsed.question or ''
             finally:
                 self._is_generating = False
-
-    def clear_history(self, keep_system_prompt: bool = True) -> None:
-        if self._is_generating:
-            raise RuntimeError('Agent is currently generating a response. Please wait.')
-        if keep_system_prompt and self.history:
-            self.history = [self.history[0]]
-        else:
-            self.history = []
-        self.flag = None
-        self.anamnesis = None
-        self.diagnosis = None
-        self.suggestion = None
-        self.end = None
 
     @property
     def conversation_history(self) -> list[Message]:

@@ -1,4 +1,4 @@
-# Virtual Nurse — (Next.js + TypeScript + Tailwind)
+# Virtual Nurse (Inteligent Queueing System) — (Next.js + TypeScript + Tailwind)
 
 A compact starter for a **virtual nurse** that gathers basic patient info (name → age → symptoms → allergies → meds). No external APIs; pure client demo. Built with **Next.js (App Router) + TypeScript + Tailwind**. Components are split and styled with a minimal, material-ish, futuristic healthcare feel.
 

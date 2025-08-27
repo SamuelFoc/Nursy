@@ -87,12 +87,12 @@ NURSE_EXAMPLE_OUTPUT_PROMPT = Prompt(
 
 DIAGNOSTIC_PROMPT = CombinedPrompt(
     purpose='Full virtual nurse pre-diagnostic interaction logic.',
-    prompts=(
+    prompts=[
         NURSE_BEHAVIORAL_PROMPT,
         NURSE_STRUCTURAL_PROMPT,
         NURSE_TRIAGE_RULES_PROMPT,
         NURSE_EXAMPLE_OUTPUT_PROMPT,
-    ),
+    ],
 )
 
 REQUEST_VERIFICATION_PROMPT = Prompt(

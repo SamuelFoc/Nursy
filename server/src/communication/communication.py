@@ -4,7 +4,7 @@ from dataclasses import dataclass
 @dataclass
 class Prompt:
     template: str
-    purpose: str = None
+    purpose: str | None = None
 
     def eval(self, **context) -> str:
         if not context:
@@ -29,7 +29,7 @@ class CombinedPrompt:
 @dataclass
 class Response:
     value: str
-    purpose: str = None
+    purpose: str | None = None
 
     def eval(self) -> str:
         return self.value

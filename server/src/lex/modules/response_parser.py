@@ -13,7 +13,7 @@ from src.lex.regex_patterns import Extractor
 
 
 @dataclass
-class ParsedBlocks:
+class ParsedResponse:
     question: str = ''
     flag: str | None = None
     diagnosis: str | None = None
@@ -42,17 +42,18 @@ class ParsedBlocks:
             return True
         if v in ('false', 'no', '0'):
             return False
+        return None
 
 
 class RegexParser:
-    def parse(self, text: str) -> ParsedBlocks:
+    def parse(self, text: str) -> ParsedResponse:
         raw = text.strip()
         # If no tags at all, treat whole thing as [Q] to avoid UX dead-ends.
         has_any_tag = bool(re.search(r'^\s*\[[QFAISE]\]:', raw, re.MULTILINE))
         if not has_any_tag:
-            return ParsedBlocks(q=raw)
+            return ParsedResponse(question=raw)
 
-        return ParsedBlocks(
+        return ParsedResponse(
             question=Extractor.extract(raw, QUESTION_REGEX),
             flag=Extractor.extract(raw, FLAG_REGEX) or None,
             diagnosis=Extractor.extract(raw, DIAGNOSIS_REGEX) or None,
