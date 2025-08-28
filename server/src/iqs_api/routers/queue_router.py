@@ -17,6 +17,9 @@ async def get_public_queue(queue: StateQueue = Depends(use_queue)) -> PublicQueu
 
 @router.post('/register/{session_id}', response_model=Participant)
 async def register_participant(session_id: str, queue: StateQueue = Depends(use_queue)) -> Participant:
+    participant = queue.get_participant(session_id)
+    if participant is not None:
+        return participant
     participant = Participant(session_id=session_id)
     queue.add_participant(participant)
     return participant

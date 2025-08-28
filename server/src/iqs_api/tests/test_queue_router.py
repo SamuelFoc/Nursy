@@ -53,6 +53,11 @@ def test_register_participant(client: TestClient, app) -> None:
     assert participant.seq == 1
     assert participant.session_id == 's1'
 
+    res = client.post(f'/register/{ids[-1]}')
+    assert len(app.state.queue) == 2
+    res = client.post(f'/register/{ids[-1]}')
+    assert len(app.state.queue) == 2
+
 
 def test_get_participant(client: TestClient, app) -> None:
     sid = 's1'

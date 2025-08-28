@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import { Logo } from "./Logo";
 
 export function AppBar({
@@ -12,25 +11,11 @@ export function AppBar({
       <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Logo href="/" />
-          <span className="font-semibold tracking-tight">Nursy</span>
+          <span className="font-semibold tracking-tight">IQS</span>
         </div>
         {variant === "landing" ? (
           <nav className="hidden sm:flex items-center gap-6 text-sm text-slate-300">
-            <a href="#features" className="hover:text-white">
-              Features
-            </a>
-            <a href="#privacy" className="hover:text-white">
-              Privacy
-            </a>
-            <a href="#contact" className="hover:text-white">
-              Contact
-            </a>
-            <Link
-              href="/chat"
-              className="rounded-md bg-sky-500 px-3 py-1.5 font-medium text-slate-950 hover:bg-sky-400"
-            >
-              Start Chat
-            </Link>
+            {/* Here comes the links */}
           </nav>
         ) : (
           <div />

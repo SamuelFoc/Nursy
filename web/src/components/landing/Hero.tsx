@@ -1,11 +1,11 @@
 "use client";
-import Link from "next/link";
+import { JoinQueueButton } from "@/components/landing/JoinQueueButton";
 import { HeartbeatIcon, ShieldIcon } from "../custom/Icons";
-
 
 export function Hero() {
   return (
     <section className="relative overflow-hidden">
+      {/* background */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,theme(colors.white/5)_1px,transparent_1px)] [background-size:24px_24px]"
@@ -18,26 +18,16 @@ export function Hero() {
       <div className="relative mx-auto max-w-6xl px-4 py-20 sm:py-28">
         <div className="max-w-2xl">
           <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-white">
-            AI triage for modern healthcare
+            Intelligent Queueing System
           </h1>
-          <p className="mt-4 text-slate-300">
-            A minimal, secure intake assistant that collects basic patient
-            information before a nurse steps in—fast, consistent, and
-            privacy-first.
+
+          <p className="mt-2 text-slate-300">
+            Register, get a number, consult your problem and watch your live position.
           </p>
-          <div className="mt-8 flex items-center gap-3">
-            <Link
-              href="/chat"
-              className="inline-flex items-center justify-center rounded-lg bg-sky-500 px-5 py-3 font-medium text-slate-950 shadow-sm hover:bg-sky-400"
-            >
-              Start Chat
-            </Link>
-            <a
-              href="#features"
-              className="inline-flex items-center justify-center rounded-lg border border-white/10 px-5 py-3 font-medium text-white/90 hover:bg-white/5"
-            >
-              How it works
-            </a>
+
+          <div className="mt-16 flex flex-wrap items-center gap-3">
+            {/* Primary action: register and redirect to live status */}
+            <JoinQueueButton/>
           </div>
 
           <div className="mt-6 flex items-center gap-4 text-xs text-slate-400">
@@ -47,9 +37,14 @@ export function Hero() {
             </div>
             <div className="flex items-center gap-1">
               <HeartbeatIcon className="h-4 w-4" />
-              Built for clinical triage
+              Triage-aware prioritization
             </div>
           </div>
+
+          {/* Terse disclosure; set expectations */}
+          <p className="mt-2 text-xs text-slate-500">
+            Note: Critical cases may be prioritized ahead of you based on clinical triage.
+          </p>
         </div>
       </div>
     </section>
