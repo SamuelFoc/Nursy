@@ -1,6 +1,6 @@
 "use client";
 import { JoinQueueButton } from "@/components/landing/JoinQueueButton";
-import { HeartbeatIcon, ShieldIcon } from "../custom/Icons";
+import { HeartbeatIcon, ShieldIcon } from "../general/Icons";
 
 export function Hero() {
   return (
@@ -22,12 +22,13 @@ export function Hero() {
           </h1>
 
           <p className="mt-2 text-slate-300">
-            Register, get a number, consult your problem and watch your live position.
+            Register, get a number, consult your problem and watch your live
+            position.
           </p>
 
           <div className="mt-16 flex flex-wrap items-center gap-3">
             {/* Primary action: register and redirect to live status */}
-            <JoinQueueButton/>
+            <JoinQueueButton />
           </div>
 
           <div className="mt-6 flex items-center gap-4 text-xs text-slate-400">
@@ -43,7 +44,8 @@ export function Hero() {
 
           {/* Terse disclosure; set expectations */}
           <p className="mt-2 text-xs text-slate-500">
-            Note: Critical cases may be prioritized ahead of you based on clinical triage.
+            Note: Critical cases may be prioritized ahead of you based on
+            clinical triage.
           </p>
         </div>
       </div>
