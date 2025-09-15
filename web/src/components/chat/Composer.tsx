@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
 
 export function Composer({
   onSend,
@@ -17,9 +17,11 @@ export function Composer({
   }
 
   return (
-    <div className="flex gap-2">
+    <div className="flex items-center gap-2">
       <input
-        className="flex-1 border border-white/10 bg-transparent rounded px-3 py-2 text-sm text-slate-100 placeholder:text-slate-400"
+        className="flex-1 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm 
+               text-slate-100 placeholder:text-slate-400 
+               focus:outline-none focus:ring-2 focus:ring-sky-500/50 transition"
         placeholder={disabled ? "Sending…" : "Type your message…"}
         value={value}
         onChange={(e) => setValue(e.target.value)}
@@ -31,7 +33,12 @@ export function Composer({
       <button
         onClick={handleSend}
         disabled={disabled}
-        className="px-4 py-2 rounded text-sm bg-sky-500 text-slate-950 hover:bg-sky-400 disabled:opacity-50"
+        className="relative inline-flex items-center justify-center px-6 sm:px-8 py-2.5 sm:py-3
+               rounded-full border border-white text-white font-medium tracking-wide
+               transition-all duration-300 ease-out
+               hover:bg-white hover:text-black
+               focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black
+               disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Send
       </button>

@@ -1,13 +1,18 @@
 "use client";
-import React from "react";
-import { Logo } from "../landing/Logo";
+import { MinimalLogo } from "../general/MinimalLogo";
 
 export function ChatHeader() {
-return (
-<header className="sticky top-0 z-10 border-b border-white/10 backdrop-blur supports-[backdrop-filter]:bg-slate-900/60">
-<div className="mx-auto max-w-3xl px-4 h-12 flex items-center">
-<Logo href="/" ariaLabel="Go to landing page" />
-</div>
-</header>
-);
+  return (
+    <header className="sticky top-0 z-10 border-b border-white/10 bg-black/60 backdrop-blur">
+      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
+        <div className="flex items-center gap-2">
+          <MinimalLogo href="/" />
+          <span className="font-semibold tracking-tight">IQS</span>
+        </div>
+        <nav className="hidden items-center gap-6 text-sm text-slate-300 sm:flex">
+          {/* Links here */}
+        </nav>
+      </div>
+    </header>
+  );
 }

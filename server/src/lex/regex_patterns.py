@@ -1,7 +1,6 @@
 import re
-from typing import NewType
 
-RegexExpression = NewType('RegexExpression', str)
+type RegexExpression = str
 
 
 class Extractor:
@@ -16,14 +15,14 @@ class Extractor:
 # --- REGEX EXPRESSIONS ---
 
 
-QUESTION_REGEX = r'\[Q\]:\s*(.*?)(?=\n\[|$)'
+QUESTION_REGEX: RegexExpression = r'\[Q\]:\s*(.*?)(?=\n\[|$)'
 
-ANAMNESIS_REGEX = r'\[A\]:\s*(\{.*?\})(?=\n\[|$)'
+ANAMNESIS_REGEX: RegexExpression = r'\[A\]:\s*(\{.*?\})(?=\n\[|$)'
 
-FLAG_REGEX = r'\[F\]:\s*(.*?)(?=\n\[|$)'
+FLAG_REGEX: RegexExpression = r'\[F\]:\s*(.*?)(?=\n\[|$)'
 
-DIAGNOSIS_REGEX = r'\[D\]:\s*(.*?)(?=\n\[|$)'
+DIAGNOSIS_REGEX: RegexExpression = r'\[D\]:\s*(.*?)(?=\n\[|$)'
 
-SUGGESTION_REGEX = r'\[S\]:\s*(.*?)(?=\n\[|$)'
+SUGGESTION_REGEX: RegexExpression = r'\[S\]:\s*(.*?)(?=\n\[|$)'
 
-END_FLAG_REGEX = r'\[E\]:\s*(.*?)(?=\n\[|$)'
+END_FLAG_REGEX: RegexExpression = r'\[E\]:\s*(.*?)(?=\n\[|$)'

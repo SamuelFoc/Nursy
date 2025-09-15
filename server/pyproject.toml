@@ -40,6 +40,10 @@ exclude = [
 line-length = 200
 target-version = "py312"
 
+[tool.ruff.per-file-ignores]
+"**/tests/**/*.py" = ["S101"]
+"**/routers/*.py" = ["B008"]
+
 [tool.ruff.lint]
 preview = true
 ignore = [
@@ -67,10 +71,9 @@ ignore = [
     "SIM108", # Use a ternary operator instead of if-else block
     "SIM117", # Use a single `with` statement with multiple contexts instead of nested `with` statements
     "SIM118", # Do not use "k in actual.keys()"
-
-    "UP007", # Use `X | Y` for type annotations (triggers on Optional[])
     "UP015", # Unnecessary open mode parameters
     "ERA001", # Commented-out code
+    "UP007",  # Allow Optional[T] instead of T | None
 ]
 select = [
     'A', # flake8-builtins
@@ -96,6 +99,17 @@ select = [
     'W', # pycodestyle / Warning
 ]
 
+unfixable = [
+    "UP007",  # Prevent auto-fixes from rewriting Optional to |
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+
+[tool.mypy]
+files = ["src"]
+explicit_package_bases = true
+
 [tool.ruff.lint.flake8-annotations]
 mypy-init-return = true
 
@@ -120,3 +134,5 @@ line-ending = "auto"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.12.4"
+pytest = "^8.4.1"
+mypy = "^1.17.1"

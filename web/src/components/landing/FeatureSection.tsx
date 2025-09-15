@@ -1,7 +1,11 @@
 "use client";
-import { ChatIcon, ClipboardIcon, ShieldIcon, SparkIcon } from "../custom/Icons";
+import {
+  ChatIcon,
+  ClipboardIcon,
+  ShieldIcon,
+  SparkIcon,
+} from "../general/Icons";
 import { FeatureCard } from "./FeatureCard";
-
 
 export function FeaturesSection() {
   return (

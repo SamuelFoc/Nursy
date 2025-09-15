@@ -1,19 +1,20 @@
-import { AppBar } from "@/components/landing/AppBar";
-import { CtaSection } from "@/components/landing/CtaSection";
-import { FeaturesSection } from "@/components/landing/FeatureSection";
-import { SiteFooter } from "@/components/landing/Footer";
-import { Hero } from "@/components/landing/Hero";
-import { InfoSection } from "@/components/landing/InfoSection";
+import { JoinQueueButton } from "@/components/buttons/JoinQueueButton";
 
-export default function LandingPage() {
+export default function QueueLanding() {
   return (
-    <div className="min-h-dvh bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-slate-100">
-      <AppBar />
-      <Hero />
-      <FeaturesSection />
-      <InfoSection />
-      <CtaSection />
-      <SiteFooter />
+    <div className="min-h-screen flex flex-col items-center justify-between bg-black text-white font-sans">
+      <main className="flex flex-col items-center justify-center flex-grow space-y-8">
+        <h1 className="text-2xl tracking-widest font-light text-gray-300">
+          Intelligent Queue System
+        </h1>
+        <JoinQueueButton>Join Queue</JoinQueueButton>
+        <p className="text-xs text-gray-500 tracking-wide">
+          Do not waste your time in queue
+        </p>
+      </main>
+      <footer className="py-4 text-xs text-gray-600 tracking-wide">
+        © IQS – Intelligent Queue Systems
+      </footer>
     </div>
   );
 }
