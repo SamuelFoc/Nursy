@@ -23,6 +23,7 @@ class StateQueue:
 
     def assign_agent(self, participant: Participant, agent: ChatAgent) -> None:
         self._agents_queue_map[participant.session_id] = agent
+        participant.set_agent_id(agent.id)
 
     def dequeue(self) -> Participant:
         participant = self._queue.popleft()

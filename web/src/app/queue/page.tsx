@@ -39,10 +39,10 @@ export default function QueuePage() {
 
   return (
     <section className="relative overflow-hidden bg-black text-white">
-      <div className="relative mx-auto max-w-6xl px-4 py-20 sm:py-28">
-        <div className="max-w-2xl">
+      <div className="relative mx-auto px-4 lg:px-20 py-20 sm:py-28">
+        <div className="w-full">
           <div className="flex items-center justify-between gap-4">
-            <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight">
+            <h1 className="text-4xl sm:text-5xl 3xl:text-7xl font-semibold tracking-tight">
               Queue
             </h1>
 
@@ -55,7 +55,7 @@ export default function QueuePage() {
             )}
           </div>
 
-          <div className="mt-16 sm:mt-20 grid grid-cols-1 gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="w-full mt-16 sm:mt-20 grid grid-cols-4 gap-6 sm:gap-8 sm:grid-cols-6 lg:grid-cols-6">
             {queue?.queue?.map((item, id) => (
               <PublicTicketCard key={id} seq={item} />
             ))}

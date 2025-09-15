@@ -35,29 +35,40 @@ async def init_chat(session_id: str, queue: StateQueue = Depends(use_queue)) -> 
     if not participant:
         raise HTTPException(status_code=404, detail=f'Participant with session_id: {session_id} not found')
 
-    agent = ChatAgent(system_prompt=DIAGNOSTIC_PROMPT)
-    queue.assign_agent(participant, agent)
-    agent.init_conversation(
-        Message(role=Role.ASSISTANT, content='To get started, can you tell me what symptoms or concerns brought you in today?'),
-    )
-    return Chat(history=agent.conversation_history)
+    if not participant.agent_id:
+        agent = ChatAgent(system_prompt=DIAGNOSTIC_PROMPT)
+        queue.assign_agent(participant, agent)
+        agent.init_conversation(
+            Message(role=Role.ASSISTANT, content='To get started, can you tell me what symptoms or concerns brought you in today?'),
+        )
+        chat = Chat(history=agent.conversation_history)
+        participant.set_chat(chat)
+        return chat
+
+    return participant.chat
 
 
 @router.get('/{session_id}', response_model=Chat)
 async def get_chat(session_id: str, queue: StateQueue = Depends(use_queue)) -> Chat:
-    agent = queue.get_agent(session_id)
+    participant = queue.get_participant(session_id)
 
-    if agent is None:
-        raise HTTPException(status_code=404, detail=f'No agent found for session_id: {session_id}, first call /api/chat/init/{session_id}')
+    if not participant:
+        raise HTTPException(status_code=404, detail=f'Participant with session_id: {session_id} not found')
 
-    return Chat(history=agent.conversation_history)
+    if participant.chat is None:
+        raise HTTPException(status_code=404, detail=f'No chat found for session_id: {session_id}, first call /api/chat/init/{session_id}')
+
+    return participant.chat
 
 
 @router.post('/{session_id}', response_model=Chat)
 async def chat(session_id: str, request: ParticipantResponse, queue: StateQueue = Depends(use_queue)) -> Chat:
-    agent = queue.get_agent(session_id)
-    if agent is None:
+    participant = queue.get_participant(session_id)
+
+    if participant.agent_id is None:
         raise HTTPException(status_code=404, detail=f'No agent found for session_id: {session_id}, first call /api/chat/init/{session_id}')
+
+    agent = queue.get_agent(session_id)
 
     if agent.is_generating:
         raise HTTPException(status_code=409, detail='Agent is currently generating a response.')
@@ -69,9 +80,12 @@ async def chat(session_id: str, request: ParticipantResponse, queue: StateQueue 
         agent.history.append(
             Message(role=Role.VERIFIER, content='Your response seems unrelated or inappropriate. Please rephrase.'),
         )
-        return Chat(history=agent.conversation_history)
+        chat = Chat(history=agent.conversation_history)
+        participant.set_chat(chat)
+        return participant.chat
 
     follow_up_question = await agent.process_message(Message(role=Role.USER, content=request.message))
     agent.history.append(Message(role=Role.ASSISTANT, content=follow_up_question))
-
-    return Chat(history=agent.conversation_history)
+    chat = Chat(history=agent.conversation_history)
+    participant.set_chat(chat)
+    return participant.chat
