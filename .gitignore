@@ -11,3 +11,6 @@ __pycache__
 ntb
 patients
 **/*.egg-info/
+
+*.db
+*/migrations/versions
