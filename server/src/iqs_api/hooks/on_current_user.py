@@ -8,7 +8,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
 from src.iqs_api.db import user_crud
-from src.iqs_api.hooks import on_db
+from src.iqs_api.hooks.on_db import on_db
 
 load_dotenv()
 SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'secret-#0001-key')

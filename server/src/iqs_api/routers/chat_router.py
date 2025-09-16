@@ -4,13 +4,13 @@ from dotenv import load_dotenv
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
-from server.src.iqs_api.routers.chat_schema import ParticipantResponseSchema
 
 from src.agents.chat_agent import ChatAgent
 from src.agents.verification_agent import VerificationAgent
 from src.communication.lib.prompts import DIAGNOSTIC_PROMPT
 from src.communication.lib.prompts import REQUEST_VERIFICATION_PROMPT
 from src.iqs_api.hooks.on_queue import on_queue
+from src.iqs_api.routers.chat_schema import ParticipantResponseSchema
 from src.iqs_chat.chat import Chat
 from src.iqs_chat.chat import Message
 from src.iqs_chat.chat import Role
