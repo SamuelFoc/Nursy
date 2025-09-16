@@ -4,22 +4,17 @@ from dotenv import load_dotenv
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
-from openai import BaseModel
+from server.src.iqs_api.routers.chat_schema import ParticipantResponseSchema
 
 from src.agents.chat_agent import ChatAgent
 from src.agents.verification_agent import VerificationAgent
 from src.communication.lib.prompts import DIAGNOSTIC_PROMPT
 from src.communication.lib.prompts import REQUEST_VERIFICATION_PROMPT
-from src.iqs_api.hooks.use_queue import use_queue
+from src.iqs_api.hooks.on_queue import on_queue
 from src.iqs_chat.chat import Chat
 from src.iqs_chat.chat import Message
 from src.iqs_chat.chat import Role
 from src.iqs_ws.queue import StateQueue
-
-
-class ParticipantResponse(BaseModel):
-    message: str
-
 
 load_dotenv()
 if not os.getenv('OPENAI_API_KEY'):
@@ -30,7 +25,7 @@ verification_agent = VerificationAgent(REQUEST_VERIFICATION_PROMPT)
 
 
 @router.post('/init/{session_id}', response_model=Chat)
-async def init_chat(session_id: str, queue: StateQueue = Depends(use_queue)) -> Chat:
+async def init_chat(session_id: str, queue: StateQueue = Depends(on_queue)) -> Chat:
     participant = queue.get_participant(session_id)
     if not participant:
         raise HTTPException(status_code=404, detail=f'Participant with session_id: {session_id} not found')
@@ -49,7 +44,7 @@ async def init_chat(session_id: str, queue: StateQueue = Depends(use_queue)) -> 
 
 
 @router.get('/{session_id}', response_model=Chat)
-async def get_chat(session_id: str, queue: StateQueue = Depends(use_queue)) -> Chat:
+async def get_chat(session_id: str, queue: StateQueue = Depends(on_queue)) -> Chat:
     participant = queue.get_participant(session_id)
 
     if not participant:
@@ -62,7 +57,7 @@ async def get_chat(session_id: str, queue: StateQueue = Depends(use_queue)) -> C
 
 
 @router.post('/{session_id}', response_model=Chat)
-async def chat(session_id: str, request: ParticipantResponse, queue: StateQueue = Depends(use_queue)) -> Chat:
+async def chat(session_id: str, request: ParticipantResponseSchema, queue: StateQueue = Depends(on_queue)) -> Chat:
     participant = queue.get_participant(session_id)
 
     if participant.agent_id is None:
