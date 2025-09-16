@@ -19,6 +19,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl='login')
 def on_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(on_db)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        print(payload)
         email: str | None = payload.get('sub')
         if email is None:
             raise HTTPException(status_code=401, detail='Invalid token')
