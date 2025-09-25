@@ -1,5 +1,9 @@
 "use client";
-import StatusSection from "@/components/queue/personal/StatusSection";
+import AssistantPrepCard from "@/components/chat/AssistantPrepCard";
+import { ParticipantSiteLayout } from "@/components/general/layouts/ParticipantSiteLayout";
+import Section from "@/components/general/layouts/Section";
+import Navigator from "@/components/general/Navigator";
+import { PersonalTicketCard } from "@/components/queue/personal/PersonalTicketCard";
 import { ParticipantSchema, type Participant } from "@/types/schema";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -26,8 +30,16 @@ export default function QueuePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black">
-      <StatusSection sessionId={sessionId} participant={participant} />
-    </div>
+    <ParticipantSiteLayout>
+      <Section>
+        <Navigator title="Home" />
+      </Section>
+      <Section>
+        <PersonalTicketCard seq={participant?.seq ?? null} />
+      </Section>
+      <Section>
+        <AssistantPrepCard />
+      </Section>
+    </ParticipantSiteLayout>
   );
 }

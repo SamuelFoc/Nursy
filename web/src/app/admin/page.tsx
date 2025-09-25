@@ -2,6 +2,7 @@
 
 import { AuthButton } from "@/components/admin/auth/AuthButton";
 import { AuthLayout } from "@/components/admin/auth/AuthLayout";
+import { ParticipantRow } from "@/components/admin/home/ParticipantRow";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -51,16 +52,12 @@ export default function AdminPage() {
   }
 
   return (
-    <AuthLayout title="IQS">
-      <div className="flex flex-col gap-6">
-        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-center">
+    <div className="flex min-h-dvh flex-col bg-black text-white antialiased">
+      {/* Header */}
+      <header className="flex items-center justify-between px-12 py-4 border-b border-neutral-800">
+        <h1 className="text-lg font-semibold tracking-tight">
           Admin Dashboard
         </h1>
-        <div className="rounded-2xl bg-neutral-900 border border-neutral-800 p-6 shadow-lg">
-          <pre className="text-sm text-gray-300 whitespace-pre-wrap">
-            {JSON.stringify(data, null, 2)}
-          </pre>
-        </div>
         <AuthButton
           type="button"
           onClick={() => {
@@ -70,7 +67,18 @@ export default function AdminPage() {
         >
           Logout
         </AuthButton>
-      </div>
-    </AuthLayout>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex flex-col gap-8 max-w-3xl w-full mx-auto p-6">
+        <div className="overflow-hidden rounded-2xl bg-neutral-900 border border-neutral-800 shadow-sm divide-y divide-neutral-800">
+          {data?.participants
+            .sort((a, b) => a.seq - b.seq)
+            .map((p) => (
+              <ParticipantRow key={p.session_id} participant={p} />
+            ))}
+        </div>
+      </main>
+    </div>
   );
 }

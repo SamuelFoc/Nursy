@@ -8,7 +8,7 @@ export function AuthButton({ children, ...props }: AuthButtonProps) {
   return (
     <button
       {...props}
-      className="w-full rounded-xl bg-white text-black font-semibold py-3 mt-4 
+      className="w-full max-w-52 rounded-xl bg-white text-black font-semibold py-3 mt-4 
                  hover:bg-zinc-200 transition-colors tracking-wide"
     >
       {children}
