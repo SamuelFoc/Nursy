@@ -1,6 +1,6 @@
 "use client";
 
-import { ParticipantSiteLayout } from "@/components/general/layouts/ParticipantSiteLayout";
+import { BasicSiteLayout } from "@/components/general/layouts/BasicSiteLayout";
 import Section from "@/components/general/layouts/Section";
 import Navigator from "@/components/general/Navigator";
 import QueueGrid from "@/components/queue/QueueGrid";
@@ -24,13 +24,13 @@ export default function QueuePage() {
   }, []);
 
   return (
-    <ParticipantSiteLayout>
+    <BasicSiteLayout>
       <Section>
         <Navigator title="Queue" />
       </Section>
       <Section>
         <QueueGrid queue={queue} />
       </Section>
-    </ParticipantSiteLayout>
+    </BasicSiteLayout>
   );
 }

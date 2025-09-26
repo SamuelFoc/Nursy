@@ -13,7 +13,7 @@ export default function ToggleMenu() {
       </button>
 
       {open && (
-        <div className="fixed inset-0 bg-black bg-opacity-95 pt-28 flex flex-col items-center justify-start space-y-8 text-white text-3xl">
+        <div className="fixed inset-0 bg-black bg-opacity-95 pt-28 flex flex-col items-center justify-start space-y-20 text-white text-4xl">
           {/* Close button inside overlay */}
           <button
             onClick={() => setOpen(false)}

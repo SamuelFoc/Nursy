@@ -1,9 +1,9 @@
 import { JoinQueueButton } from "@/components/buttons/JoinQueueButton";
-import { ParticipantSiteLayout } from "@/components/general/layouts/ParticipantSiteLayout";
+import { BasicSiteLayout } from "@/components/general/layouts/BasicSiteLayout";
 
 export default function QueueLanding() {
   return (
-    <ParticipantSiteLayout>
+    <BasicSiteLayout>
       <div className="flex flex-col items-center justify-center flex-grow space-y-8">
         <h1 className="text-2xl tracking-widest font-light text-gray-300">
           Intelligent Queue System
@@ -13,6 +13,6 @@ export default function QueueLanding() {
           Do not waste your time in queue
         </p>
       </div>
-    </ParticipantSiteLayout>
+    </BasicSiteLayout>
   );
 }
