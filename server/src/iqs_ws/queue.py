@@ -32,9 +32,9 @@ class StateQueue:
         return participant
 
     def get_participant(self, session_id: str) -> Participant | None:
-        for p in self._queue:
-            if p.session_id == session_id:
-                return p
+        for participant in self._queue:
+            if participant.session_id == session_id:
+                return participant
         return None
 
     def get_agent(self, session_id: str) -> ChatAgent | None:
@@ -44,6 +44,9 @@ class StateQueue:
 
     def to_public_queue(self) -> PublicQueue:
         return PublicQueue(queue=[participant.seq for participant in self._queue if participant.seq is not None])
+
+    def to_admin_queue(self) -> list[Participant]:
+        return list(self._queue)
 
     def prioritize(self, id: str) -> None:
         for i, p in enumerate(self._queue):

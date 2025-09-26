@@ -10,28 +10,28 @@ export function MinimalLogo({
   href?: string;
   ariaLabel?: string;
 }) {
-  const size = small ? "h-5 w-5" : "h-7 w-7"; // slightly larger by default
+  const size = small ? "h-5 w-5" : "h-7 w-7";
   const gradientId = "iqs-logo-gradient";
 
   return (
     <Link
       href={href}
       aria-label={ariaLabel}
-      className={`relative inline-flex items-center justify-center ${size}`}
+      className="relative inline-flex items-center gap-2"
     >
+      {/* Symbol */}
       <svg
         viewBox="0 0 24 24"
-        className="h-full w-full"
+        className={`${size}`}
         role="img"
         aria-hidden="true"
       >
         <defs>
           <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#fff" stopOpacity="0.9" />
-            <stop offset="100%" stopColor="#38bdf8" />
+            <stop offset="0%" stopColor="#f3f4f6" stopOpacity="0.95" />
+            <stop offset="100%" stopColor="#6b7280" />
           </linearGradient>
         </defs>
-        {/* Rounded futuristic square */}
         <rect
           x="3"
           y="3"
@@ -42,7 +42,6 @@ export function MinimalLogo({
           stroke={`url(#${gradientId})`}
           strokeWidth="1.5"
         />
-        {/* Abstract cross/plus for queueing symbol */}
         <path
           d="M8 12h8M12 8v8"
           stroke={`url(#${gradientId})`}
@@ -50,7 +49,15 @@ export function MinimalLogo({
           strokeLinecap="round"
         />
       </svg>
-      <span className="sr-only">IQS</span>
+
+      {/* Futuristic wordmark */}
+      <span
+        className={`tracking-widest font-semibold bg-gradient-to-b from-gray-100 to-gray-500 bg-clip-text text-transparent select-none ${
+          small ? "text-sm" : "text-lg"
+        }`}
+      >
+        IQS
+      </span>
     </Link>
   );
 }

@@ -1,7 +1,9 @@
 "use client";
-import { ChatHeader } from "@/components/chat/ChatHeader";
 import { Composer } from "@/components/chat/Composer";
 import { MessageList } from "@/components/chat/MessageList";
+import { ChatSiteLayout } from "@/components/general/layouts/ChatSiteLayout";
+import Section from "@/components/general/layouts/Section";
+import Navigator from "@/components/general/Navigator";
 import { ChatSchema, Message } from "@/types/schema";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -54,17 +56,11 @@ export default function Chat() {
   }
 
   return (
-    <div className="flex min-h-dvh flex-col bg-black text-white antialiased">
-      <ChatHeader />
-
-      {/* Main content; add bottom padding so the mobile-fixed footer doesn't overlap */}
-      <main className="flex-1 overflow-y-auto pb-28 sm:pb-0">
-        <div className="mx-auto max-w-2xl px-4 py-4">
-          <div className="rounded-2xl p-4 sm:p-6 backdrop-blur">
-            <MessageList messages={messages} />
-          </div>
-        </div>
-      </main>
+    <ChatSiteLayout>
+      <Navigator />
+      <Section>
+        <MessageList messages={messages} />
+      </Section>
 
       {/* Footer: fixed on mobile for easy access, normal flow on larger screens */}
       <footer className="fixed bottom-0 left-0 w-full border-t border-white/10 bg-black/80 backdrop-blur sm:static">
@@ -72,6 +68,6 @@ export default function Chat() {
           <Composer onSend={send} disabled={sending} />
         </div>
       </footer>
-    </div>
+    </ChatSiteLayout>
   );
 }
