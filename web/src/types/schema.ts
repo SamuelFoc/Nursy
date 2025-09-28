@@ -20,9 +20,13 @@ export type Chat = z.infer<typeof ChatSchema>;
 
 export const ParticipantSchema = z.object({
   session_id: z.string(),
-  seq: z.number().nullable().optional(),
+  seq: z.number(),
   chat: ChatSchema.nullable().optional(),
   agent_id: z.string().nullable().optional(),
+  agent_flag: z.string().nullable().optional(),
+  agent_suggestion: z.string().nullable().optional(),
+  agent_diagnosis: z.string().nullable().optional(),
+  agent_anamnesis: z.string().nullable().optional(),
 });
 export type Participant = z.infer<typeof ParticipantSchema>;
 

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export function Composer({
   onSend,
@@ -9,16 +9,19 @@ export function Composer({
   disabled?: boolean;
 }) {
   const [value, setValue] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
 
   function handleSend() {
     if (!value.trim() || disabled) return;
     onSend(value);
     setValue("");
+    inputRef.current?.focus(); // keep typing without clicking
   }
 
   return (
     <div className="flex items-center gap-2">
       <input
+        ref={inputRef}
         className="flex-1 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm 
                text-slate-100 placeholder:text-slate-400 
                focus:outline-none focus:ring-2 focus:ring-sky-500/50 transition"
@@ -26,11 +29,16 @@ export function Composer({
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === "Enter") handleSend();
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            handleSend();
+          }
         }}
         disabled={disabled}
+        autoFocus
       />
       <button
+        type="button"
         onClick={handleSend}
         disabled={disabled}
         className="relative inline-flex items-center justify-center px-6 sm:px-8 py-2.5 sm:py-3

@@ -1,6 +1,5 @@
 "use client";
 
-import { AuthButton } from "@/components/admin/auth/AuthButton";
 import { AuthLayout } from "@/components/admin/auth/AuthLayout";
 import { InputField } from "@/components/admin/auth/InputField";
 import { useRouter } from "next/navigation";
@@ -65,9 +64,13 @@ export default function LoginPage() {
           onChange={(e) => setPassword(e.target.value)}
         />
         {error && <p className="text-red-400 text-sm text-center">{error}</p>}
-        <AuthButton type="submit" disabled={loading}>
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full py-2 px-4 rounded-xl bg-white text-black font-medium transition disabled:opacity-50 disabled:cursor-not-allowed"
+        >
           {loading ? "Signing In..." : "Sign In"}
-        </AuthButton>
+        </button>
       </form>
     </AuthLayout>
   );

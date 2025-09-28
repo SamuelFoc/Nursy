@@ -8,7 +8,7 @@ import { useParticipant } from "@/hooks/useParticipant";
 
 export default function QueuePage() {
   const { participant } = useParticipant();
-
+  console.log(participant);
   return (
     <BasicSiteLayout>
       <Section>

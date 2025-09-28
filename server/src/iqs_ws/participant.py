@@ -1,3 +1,5 @@
+from typing import Any
+
 from openai import BaseModel
 
 from src.iqs_chat.chat import Chat
@@ -8,6 +10,11 @@ class Participant(BaseModel):
     seq: int | None = None
     chat: Chat | None = None
     agent_id: str | None = None
+    agent_flag: str | None = None
+    agent_anamnesis: dict[str, Any] | None = None
+    agent_diagnosis: str | None = None
+    agent_suggestion: str | None = None
+    agent_done: bool | None = None
 
     def set_seq(self, seq: int) -> None:
         self.seq = seq

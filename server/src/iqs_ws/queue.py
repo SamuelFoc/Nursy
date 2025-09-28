@@ -34,6 +34,12 @@ class StateQueue:
     def get_participant(self, session_id: str) -> Participant | None:
         for participant in self._queue:
             if participant.session_id == session_id:
+                agent = self.get_agent(session_id)
+                if agent:
+                    participant.agent_flag = agent.flag
+                    participant.agent_anamnesis = agent.anamnesis
+                    participant.agent_diagnosis = agent.diagnosis
+                    participant.agent_done = agent.end
                 return participant
         return None
 

@@ -28,6 +28,7 @@ async def register_participant(session_id: str, queue: StateQueue = Depends(on_q
 @router.get('/participant/{session_id}', response_model=Participant)
 async def get_participant(session_id: str, queue: StateQueue = Depends(on_queue)) -> Participant:
     participant = queue.get_participant(session_id)
+
     if not participant:
         raise HTTPException(status_code=404, detail=f'Participant with session_id: {session_id} not found')
     return participant

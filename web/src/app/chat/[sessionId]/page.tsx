@@ -2,7 +2,6 @@
 import { Composer } from "@/components/chat/Composer";
 import { MessageList } from "@/components/chat/MessageList";
 import { ChatSiteLayout } from "@/components/general/layouts/ChatSiteLayout";
-import Section from "@/components/general/layouts/Section";
 import Navigator from "@/components/general/Navigator";
 import { ChatSchema, Message } from "@/types/schema";
 import { useParams } from "next/navigation";
@@ -27,7 +26,7 @@ export default function Chat() {
         console.error(err);
       }
     })();
-  }, []);
+  }, [sessionId]);
 
   async function send(text: string) {
     const content = text.trim();
@@ -57,17 +56,24 @@ export default function Chat() {
 
   return (
     <ChatSiteLayout>
-      <Navigator />
-      <Section>
-        <MessageList messages={messages} />
-      </Section>
-
-      {/* Footer: fixed on mobile for easy access, normal flow on larger screens */}
-      <footer className="fixed bottom-0 left-0 w-full border-t border-white/10 bg-black/80 backdrop-blur sm:static">
-        <div className="mx-auto max-w-2xl px-4 py-3 sm:py-4">
-          <Composer onSend={send} disabled={sending} />
+      <div className="flex flex-col h-[94vh]">
+        {/* Top navigator */}
+        <div className="shrink-0">
+          <Navigator />
         </div>
-      </footer>
+
+        {/* Scrollable messages */}
+        <div className="flex-1 overflow-y-auto">
+          <MessageList messages={messages} />
+        </div>
+
+        {/* Composer at bottom */}
+        <footer className="shrink-0 border-t border-white/10 bg-black/80 backdrop-blur">
+          <div className="mx-auto max-w-2xl px-4 py-3 sm:py-4">
+            <Composer onSend={send} disabled={sending} />
+          </div>
+        </footer>
+      </div>
     </ChatSiteLayout>
   );
 }
