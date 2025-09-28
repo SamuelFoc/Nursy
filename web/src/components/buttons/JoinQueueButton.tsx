@@ -1,4 +1,5 @@
 "use client";
+import useSessionId from "@/hooks/useSessionId";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -9,12 +10,6 @@ const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 7; // 7 days
 type Props = {
   children: ReactNode;
 };
-
-function getCookie(name: string): string | null {
-  if (typeof document === "undefined") return null;
-  const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
-  return match ? decodeURIComponent(match[1]) : null;
-}
 
 function setCookie(name: string, value: string, maxAgeSeconds: number) {
   if (typeof document === "undefined") return;
@@ -29,26 +24,27 @@ function setCookie(name: string, value: string, maxAgeSeconds: number) {
 
 export function JoinQueueButton({ children }: Props) {
   const router = useRouter();
+  const sessionId = useSessionId();
 
-  const handleClick = () => {
-    // 1) Try cookie
-    let sessionId = getCookie(COOKIE_NAME);
+  const handleClick = async () => {
+    const id = sessionId ?? uuidv4();
 
-    // 2) Fallback: sessionStorage (per-tab)
-    if (!sessionId && typeof window !== "undefined") {
-      sessionId = window.sessionStorage.getItem(COOKIE_NAME) || null;
-    }
-
-    // 3) Create if missing
     if (!sessionId) {
-      sessionId = uuidv4();
-      setCookie(COOKIE_NAME, sessionId, COOKIE_MAX_AGE_SECONDS);
-      if (typeof window !== "undefined") {
-        window.sessionStorage.setItem(COOKIE_NAME, sessionId);
-      }
+      setCookie(COOKIE_NAME, id, COOKIE_MAX_AGE_SECONDS);
     }
 
-    router.push(`/queue/${sessionId}`);
+    try {
+      const res = await fetch(`/api/queue/register/${id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!res.ok) throw new Error(`Failed: ${res.status}`);
+    } catch (err) {
+      console.error("Failed to register in queue", err);
+      return;
+    }
+
+    router.push(`/queue/${id}`);
   };
 
   return (
