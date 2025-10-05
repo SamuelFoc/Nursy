@@ -32,3 +32,21 @@ async def get_participant(session_id: str, queue: StateQueue = Depends(on_queue)
     if not participant:
         raise HTTPException(status_code=404, detail=f'Participant with session_id: {session_id} not found')
     return participant
+
+
+@router.post('/call/{session_id}', response_model=Participant)
+async def call_participant(session_id: str, queue: StateQueue = Depends(on_queue)) -> Participant:
+    participant = queue.get_participant(session_id)
+    if participant is None:
+        raise HTTPException(status_code=404, detail=f'Participant with session_id: {session_id} not found')
+    participant.call()
+    return participant
+
+
+@router.post('/resolve/{session_id}', response_model=Participant)
+async def resolve_participant(session_id: str, queue: StateQueue = Depends(on_queue)) -> Participant:
+    participant = queue.get_participant(session_id)
+    if participant is None:
+        raise HTTPException(status_code=404, detail=f'Participant with session_id: {session_id} not found')
+    participant.resolve()
+    return participant

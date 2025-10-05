@@ -1,6 +1,8 @@
+from datetime import datetime
+from datetime import timezone
 from typing import Any
 
-from openai import BaseModel
+from pydantic import BaseModel
 
 from src.iqs_chat.chat import Chat
 
@@ -8,6 +10,11 @@ from src.iqs_chat.chat import Chat
 class Participant(BaseModel):
     session_id: str
     seq: int | None = None
+    called: bool | None = None
+    num_calls: int = 0
+    called_at: datetime | None = None
+    resolved: bool = False
+    resolved_at: datetime | None = None
     chat: Chat | None = None
     agent_id: str | None = None
     agent_flag: str | None = None
@@ -24,3 +31,12 @@ class Participant(BaseModel):
 
     def set_agent_id(self, id: str) -> None:
         self.agent_id = id
+
+    def call(self) -> None:
+        self.called = True
+        self.num_calls += 1
+        self.called_at = datetime.now(timezone.utc)
+
+    def resolve(self) -> None:
+        self.resolved = True
+        self.resolved_at = datetime.now(timezone.utc)

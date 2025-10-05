@@ -18,7 +18,7 @@ export default function QueueLanding() {
   return (
     <BasicSiteLayout>
       <div className="flex flex-col items-center justify-center flex-grow space-y-8">
-        <h1 className="text-2xl tracking-widest font-light text-gray-300">
+        <h1 className="text-xl tracking-widest font-light text-gray-300">
           Intelligent Queue System
         </h1>
         <JoinQueueButton>Join Queue</JoinQueueButton>
